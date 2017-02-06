@@ -13,26 +13,21 @@ import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.ServerSocket;
+import javax.swing.JOptionPane;
 
 public class ServChat extends Thread{
 
-        String text;
-        String cadComprob="cerrar";
+        public static String text;
+        public static String cadComprob="cerrar";
         static int puerto=5555;
+        public static int numComp;
+    
+    public static void main(String[] args) throws IOException {
         
-        
-    public void run(){
-        
-        
-        
-        try{
-            
-
+       
             ServerSocket serverSocket=new ServerSocket();
             
             
-            
-
             InetSocketAddress addr=new InetSocketAddress("localhost",puerto);
             serverSocket.bind(addr);
 
@@ -40,10 +35,10 @@ public class ServChat extends Thread{
             
                         
             Socket newSocket= serverSocket.accept();
-            
-            new ServChat().start();
-            
+                                    
             System.out.println("Conexion recibida");
+            
+            
 
             BufferedReader is = new BufferedReader(new InputStreamReader(newSocket.getInputStream()));
             
@@ -51,26 +46,20 @@ public class ServChat extends Thread{
             BufferedWriter os = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream()));
            
             text=is.readLine();
-            System.out.println("Mensaje que llega :"+ text);
+            System.out.println("Mensaje que envia el cliente :"+ text);
             
+            text = JOptionPane.showInputDialog("(S)Escribe un mensaje");
+            os.write(text);
             
             if (text.equals(cadComprob)){
-                 newSocket.close();     
-                serverSocket.close();
+                numComp=5;
             }
             
-             
-
-           
-            }catch (IOException e) {
+            if (numComp==5){
+                System.out.println("LOS TEXTOS COINCIDEN");
+            newSocket.close();     
+            serverSocket.close();
             }
-    }
-        
-    
-    public static void main(String[] args) {
-        
-       new ServChat().start();
-        
        
     }
 }
